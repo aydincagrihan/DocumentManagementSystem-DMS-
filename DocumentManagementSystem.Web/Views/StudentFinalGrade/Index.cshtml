@@ -1,0 +1,248 @@
+﻿@using DocumentManagementSystem.Core.Enums
+@model IEnumerable<DocumentManagementSystem.Web.DTOs.StudentFinalGradeDto>
+
+@{
+    ViewData["Title"] = "Student Final Grade";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <!-- StudentFinalGrade Tablosu İçin Düzenlemeler -->
+    <script>
+        $(function () {
+            $("#studentFinalGradeTable").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#studentFinalGradeTable_wrapper .col-md-6:eq(0)');
+        });
+
+            //Yeni kayıt butonuna basıldığında tetiklenerek yeni kayıt ekranı açılıyor.
+            //function ShowAddModal(studentFinalGradeId, operationType) {
+            //    $.ajax({
+            //        type: "GET",
+            //        url: "/StudentFinalGrade/AddStudentFinalGrade",
+            //        datatype: "Json",
+            //        data: { studentFinalGradeId: studentFinalGradeId, operationType: operationType },
+            //        success: function (data) {
+            //            // burada dinamik olarak bir detay div'i oluşturuluyor
+            //            $('body').append($('<div id="divAddPopup"></div>'));
+            //            // bu div'a partial view üzerinden gelen veriler basılıyor
+            //            $("#divAddPopup").html(data);
+            //            $('#StudentFinalGradeModal').modal('show');
+            //            event.preventDefault();
+            //            return false;
+            //        },
+            //        error: function (error) {
+            //            $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+            //            event.preventDefault();
+            //            return false;
+            //        }
+            //    });
+            //};
+
+            //Silme İşlemi
+            //$('#deleteModal').on('show.bs.modal', function (event) {
+            //    var studentFinalGradeId = $(event.relatedTarget).attr('data-id');
+            //    $("#btnDelete").click(function () {
+            //        $.ajax({
+            //            type: "POST",
+            //            url: "/StudentFinalGrade/Delete",
+            //            data: { studentFinalGradeId: studentFinalGradeId },
+            //            dataType: "json",
+            //            success: function (data) {
+            //                if (data.HataMi === false) {
+            //                    location.reload(); // Silme işlemi başarılı ise sayfayı yenile.
+            //                    $(document).Toasts('create', { class: 'bg-success', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj })
+            //                }
+            //                if (data.HataMi === true) {
+            //                    $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj })
+            //                    event.preventDefault();
+            //                    return false;
+            //                }
+            //            },
+            //            error: function (error) {
+            //                $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+            //            }
+            //        })
+            //    });
+            //});
+
+    </script>
+}
+
+<!-- Delete Modal -->
+@*<div class="modal fade" id="deleteModal">
+        <div class="modal-dialog">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h4 class="modal-title">Silme İşlemi</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>StudentFinalGrade bilgisini silmek istediğinize emin misiniz?&hellip;</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-light" id="btnDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<!-- User Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                @*<h3 class="card-title">DataTable with default features</h3>*@
+                @*<div class="col-2"><button type="button" class="btn btn-block bg-gradient-primary" onclick="ShowAddModal(null,'@Constants.OperationType.Insert')"><i class="fas fa-plus"></i>  Add Course</button></div>*@
+            </div>
+            <div class="card-body">
+                <table id="studentFinalGradeTable" class="table table-bordered table-striped">
+                    <thead>
+						<tr>
+							<th>User Name</th>
+							<th>Surname</th>
+							<th>Report Grade(40%)</th>
+							<th>Cooperation Grade(10%)</th>
+							<th>Quality Grade(30%)</th>
+							<th>Presentation Grade(20%)</th>
+							<th>Total Grade(out of 400)</th>
+							<th>Total Grade</th>
+							<th>Originality Grade</th>
+							<th>Final Grade</th>
+							<th>Organization and format</th>
+							<th>Proper citations</th>
+							<th>Writing and English quality</th>
+							<th>Size of the report</th>
+							<th>Motivation for the project</th>
+							<th>Requirements Analysis</th>
+							<th>Realistic Constraints</th>
+							<th>Ethical issues</th>
+							<th>System design</th>
+							<th>Implementation</th>
+							<th>Standards</th>
+							<th>Testing</th>
+							<th>User guide</th>
+							<th>Solution Description</th>
+							<th>References</th>
+							<th>Appendencies</th>
+							<th>Frequency of Interaction</th>
+							<th>Progress Report</th>
+							<th>Project Dev. with supervisor</th>
+							<th>Multi-disciplinary Dev.</th>
+							<th>Contribution new Ideas</th>
+							<th>Implementation Quality</th>
+							<th>Use modern Tech.</th>
+							<th>Project Solves Realistic Prob.</th>
+							<th>Organization</th>
+							<th>Time usage</th>
+							<th>Quality of Slides</th>
+							<th>Communication Skills</th>
+							<th>QA</th>
+						</tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {@foreach (var item in Model)
+                            {
+                        <tr>
+                            <td>@item.ReporstUserName</td>
+                            <td>@item.ReportsUserSurname</td>
+                            <td>@item.ToplamRaporPuan.ToString("n2")</td>
+                            <td>@item.ToplamDanismanPuan.ToString("n2")</td>
+                            <td>@item.ToplamKalitePuan.ToString("n2")</td>
+                            <td>@item.ToplamSunumPuan.ToString("n2")</td>
+                            <td>@item.GenelBolunmusToplamPuan.ToString("n2")</td>
+                            <td>@item.GenelToplamRaporPuan.ToString("n2")</td>
+                            <td>@item.GenelOzgunluk.ToString("n2")</td>
+                            <td>@item.GenelSonPuan.ToString("n2")</td>
+
+                            <td>@item.DuzenBicim.ToString("n2")</td>
+                            <td>@item.Alintilama.ToString("n2")</td>
+                            <td>@item.YazimveDilkalite.ToString("n2")</td>
+                            <td>@item.RaporBoyut.ToString("n2")</td>
+                            <td>@item.ProjeTanimi.ToString("n2")</td>
+                            <td>@item.GereksinimAnaliz.ToString("n2")</td>
+                            <td>@item.GercekciKisitlama.ToString("n2")</td>
+                            <td>@item.AhlakiKonu.ToString("n2")</td>
+                            <td>@item.SistemTasarim.ToString("n2")</td>
+                            <td>@item.Uygulama.ToString("n2")</td>
+                            <td>@item.Standartlar.ToString("n2")</td>
+                            <td>@item.Testler.ToString("n2")</td>
+                            <td>@item.SistemKullanimKılavuz.ToString("n2")</td>
+                            <td>@item.CozumAciklama.ToString("n2")</td>
+                            <td>@item.Kaynak.ToString("n2")</td>
+                            <td>@item.Ekler.ToString("n2")</td>
+
+                            <td>@item.Toplantisikligi.ToString("n2")</td>
+                            <td>@item.IlerlemeRapor.ToString("n2")</td>
+                            <td>@item.ProjeGelistirme.ToString("n2")</td>
+
+                            <td>@item.DisiplinliGelistirme.ToString("n2")</td>
+                            <td>@item.YeniFikir.ToString("n2")</td>
+                            <td>@item.UygulamaKalitesi.ToString("n2")</td>
+                            <td>@item.UygulamaAraclari.ToString("n2")</td>
+                            <td>@item.ProjeCozum.ToString("n2")</td>
+
+                            <td>@item.Duzen.ToString("n2")</td>
+                            <td>@item.ZamanKullanim.ToString("n2")</td>
+                            <td>@item.SlaytKalite.ToString("n2")</td>
+                            <td>@item.IletisimYetenek.ToString("n2")</td>
+                            <td>@item.SoruCevap.ToString("n2")</td>
+                        </tr>
+                            }
+                    }
+                    </tbody>
+                    @*<tfoot>
+						<tr>
+							<th>User Name</th>
+							<th>Surname</th>
+							<th>Report Grade(40%)</th>
+							<th>Cooperation Grade(10%)</th>
+							<th>Quality Grade(30%)</th>
+							<th>Presentation Grade(20%)</th>
+							<th>Total Grade(out of 400)</th>
+							<th>Total Grade</th>
+							<th>Originality Grade</th>
+							<th>Final Grade</th>
+							<th>Organization and format</th>
+							<th>Proper citations</th>
+							<th>Writing and English quality</th>
+							<th>Size of the report</th>
+							<th>Motivation for the project</th>
+							<th>Requirements Analysis</th>
+							<th>Realistic Constraints</th>
+							<th>Ethical issues</th>
+							<th>System design</th>
+							<th>Implementation</th>
+							<th>Standards</th>
+							<th>Testing</th>
+							<th>User guide</th>
+							<th>Solution Description</th>
+							<th>References</th>
+							<th>Appendencies</th>
+							<th>Frequency of Interaction</th>
+							<th>Progress Report</th>
+							<th>Project Dev. with supervisor</th>
+							<th>Multi-disciplinary Dev.</th>
+							<th>Contribution new Ideas</th>
+							<th>Implementation Quality</th>
+							<th>Use modern Tech.</th>
+							<th>Project Solves Realistic Prob.</th>
+							<th>Organization</th>
+							<th>Time usage</th>
+							<th>Quality of Slides</th>
+							<th>Communication Skills</th>
+							<th>QA</th>
+						</tr>
+                    </tfoot>*@
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- User Table -->

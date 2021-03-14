@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.10.1" />
+    <PackageReference Include="MimeKit" Version="2.10.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DocumentManagementSystem.Core\DocumentManagementSystem.Core.csproj" />
+    <ProjectReference Include="..\DocumentManagementSystem.Data\DocumentManagementSystem.Data.csproj" />
+  </ItemGroup>
+
+</Project>

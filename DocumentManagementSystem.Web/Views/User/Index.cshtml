@@ -1,0 +1,171 @@
+﻿@using DocumentManagementSystem.Core.Enums
+@model IEnumerable<DocumentManagementSystem.Web.DTOs.UserDto>
+@{
+    ViewBag.Title = "User Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+
+    <!-- Program Tablosu İçin Düzenlemeler -->
+    <script>
+        $(function () {
+            $("#userTable").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#userTable_wrapper .col-md-6:eq(0)');
+        });
+
+        //Yeni kayıt butonuna basıldığında tetiklenerek yeni kayıt ekranı açılıyor.
+        function ShowAddModal(userId, operationType) {
+            $.ajax({
+                type: "GET",
+                url: "/User/UserOperations",
+                datatype: "Json",
+                data: { userId: userId, operationType: operationType },
+                success: function (data) {
+                    // burada dinamik olarak bir detay div'i oluşturuluyor
+                    $('body').append($('<div id="divAddPopup"></div>'));
+                    // bu div'a partial view üzerinden gelen veriler basılıyor
+                    $("#divAddPopup").html(data);
+                    $('#UserModal').modal('show');
+                    event.preventDefault();
+                    return false;
+                },
+                error: function (error) {
+                    $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        };
+
+        //Silme İşlemi
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var userId = $(event.relatedTarget).attr('data-id');
+            $("#btnDelete").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/User/Delete",
+                    data: { userId: userId },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.HataMi === false) {
+                            location.reload(); // Silme işlemi başarılı ise sayfayı yenile.
+                            $(document).Toasts('create', { class: 'bg-success', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj })
+                        }
+                        if (data.HataMi === true) {
+                            $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj })
+                            event.preventDefault();
+                            return false;
+                        }
+                    },
+                    error: function (error) {
+                        $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+                    }
+                })
+            });
+        });
+
+    </script>
+}
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Silme İşlemi</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Kullanıcıyı silmek istediğinize emin misiniz?&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" id="btnDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal -->
+<!-- User Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <!-- Table Header -->
+                <div class="col-2"><button type="button" class="btn btn-block bg-gradient-primary" onclick="ShowAddModal(null,'@Constants.OperationType.Insert')"><i class="fas fa-plus"></i>  Add User</button></div>
+                <!-- Table Header -->
+            </div>
+            <div class="card-body">
+                <table id="userTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>E-Mail</th>
+                            <th>Type Of User</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Surname</td>
+                                <td>@item.Email</td>
+                                @if (item.UserTypeCode == UserTypes.Admin.GetHashCode())
+                                {
+                                    <td><h6><span class="right badge badge-danger">@item.UserTypeName</span></h6></td>
+                                }
+                                else if (item.UserTypeCode == UserTypes.Student.GetHashCode())
+                                {
+                                    <td><h6><span class="right badge badge-info">@item.UserTypeName</span></h6></td>
+                                }
+                                else if (item.UserTypeCode == UserTypes.JuryMember.GetHashCode())
+                                {
+                                    <td><h6><span class="right badge badge-warning">@item.UserTypeName</span></h6></td>
+                                }
+                                else
+                                {
+                                    <td><h6><span class="right badge badge-dark">@item.UserTypeName</span></h6></td>
+                                }
+                                <td class="project-actions text-center">
+                                    @*<a class="btn btn-primary btn-xs" href="#" data-id="@item.Id">
+                                        <i class="fas fa-folder"></i> Documents
+                                    </a>*@
+                                    <a class="btn btn-info btn-xs" href="#" onclick="ShowAddModal(@item.Id,'@Constants.OperationType.Update')">
+                                        <i class="fas fa-pencil-alt"></i> Edit
+                                    </a>
+                                    <a class="btn btn-danger btn-xs" href="#" data-id="@item.Id" data-toggle="modal" data-target="#deleteModal">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @*<tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>E-Mail</th>
+                            <th>Type Of User</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>*@
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

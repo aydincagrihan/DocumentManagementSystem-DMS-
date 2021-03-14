@@ -1,0 +1,177 @@
+﻿@using DocumentManagementSystem.Core.Enums
+@model IEnumerable<DocumentManagementSystem.Web.DTOs.StudentInfoDto>
+
+@{
+    ViewData["Title"] = "Student Panel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <!-- StudentInfo Tablosu İçin Düzenlemeler -->
+    <script>
+        $(function () {
+            $("#studentInfoTable").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#studentInfoTable_wrapper .col-md-6:eq(0)');
+        });
+
+        //Yeni kayıt butonuna basıldığında tetiklenerek yeni kayıt ekranı açılıyor.
+        function ShowAddModal(studentInfoId, operationType) {
+            $.ajax({
+                type: "GET",
+                url: "/StudentInfo/AddStudentInfo",
+                datatype: "Json",
+                data: { studentInfoId: studentInfoId, operationType: operationType },
+                success: function (data) {
+                    // burada dinamik olarak bir detay div'i oluşturuluyor
+                    $('body').append($('<div id="divAddPopup"></div>'));
+                    // bu div'a partial view üzerinden gelen veriler basılıyor
+                    $("#divAddPopup").html(data);
+                    $('#StudentInfoModal').modal('show');
+                    event.preventDefault();
+                    return false;
+                },
+                error: function (error) {
+                    $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+                    event.preventDefault();
+                    return false;     
+                }
+            });
+        };
+
+        function DownloadFile(studentInfoId) {
+            $.ajax({
+                type: "GET",
+                url: "/StudentInfo/DownloadFile",
+                datatype: "Json",
+                data: { studentInfoId: studentInfoId },
+                success: function (data) {
+                    window.location = '/Reports/STUDENTREPORTS/' + data.path;
+                    event.preventDefault();
+                    return false;
+                },
+                error: function (error) {
+                    $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        };
+
+        //Silme İşlemi
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var studentInfoId = $(event.relatedTarget).attr('data-id');
+            $("#btnDelete").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/StudentInfo/Delete",
+                    data: { studentInfoId: studentInfoId },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.HataMi === false) {
+                            location.reload(); // Silme işlemi başarılı ise sayfayı yenile.
+                            $(document).Toasts('create', { class: 'bg-success', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj })
+                        }
+                        if (data.HataMi === true) {
+                            $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj })
+                            event.preventDefault();
+                            return false;
+                        }
+                    },
+                    error: function (error) {
+                        $(document).Toasts('create', { class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: error.statusText })
+                    }
+                })
+            });
+        });
+
+    </script>
+}
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Silme İşlemi</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>StudentInfo bilgisini silmek istediğinize emin misiniz?&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" id="btnDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                @*<h3 class="card-title">DataTable with default features</h3>*@
+                <div class="col-2"><button type="button" class="btn btn-block bg-gradient-primary" onclick="ShowAddModal(null,'@Constants.OperationType.Insert')"><i class="fas fa-plus"></i>  Add Course</button></div>
+            </div>
+            <div class="card-body">
+                <table id="studentInfoTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Surname</th>
+                            <th>Program</th>
+                            <th>Course</th>
+                            <th>Credit</th>
+                            <th>Project Type</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {@foreach (var item in Model)
+                            {
+                        <tr>
+                            <td>@item.UserName</td>
+                            <td>@item.UserSurname</td>
+                            <td>@item.Course.Programs.Name</td>
+                            <td>@item.Course.Name</td>
+                            <td>@item.Course.Credit</td>
+                            <td>@item.ProjectTypeName</td>
+                            <td class="project-actions text-center">
+                                <a class="btn btn-primary btn-xs" href="#" onclick="DownloadFile(@item.Id)">
+                                    <i class="fas fa-folder"></i> Download Reports
+                                </a>
+                                <a class="btn btn-info btn-xs" href="#" onclick="ShowAddModal(@item.Id,'@Constants.OperationType.Update')">
+                                    <i class="fas fa-pencil-alt"></i> Edit
+                                </a>
+                                <a class="btn btn-danger btn-xs" href="#" data-id="@item.Id" data-toggle="modal" data-target="#deleteModal">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                            }
+                    }
+                    </tbody>
+                    @*<tfoot>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Surname</th>
+                            <th>Program</th>
+                            <th>Course</th>
+                            <th>Credit</th>
+                            <th>Project Type</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>*@
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- User Table -->

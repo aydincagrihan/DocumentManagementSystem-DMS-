@@ -1,0 +1,104 @@
+﻿@model DocumentManagementSystem.Web.Models.Program.ProgramModel
+
+<script>
+     function IslemTamamlandi(data) {
+            if (data.HataMi === false) {
+                location.reload();//Sayfayı yenile
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+        function IslemBasarili(data) {
+            if (data.HataMi === false) {
+                location.reload();//Sayfayı yenile
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+        function IslemBasarisiz(data) {
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === false) {
+                location.reload();//Sayfayı yenile
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+</script>
+<div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status" id="loading" style="display:none">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<div class="modal fade" id="ProgramModal">
+    <div class="modal-dialog">
+        <form method="post" data-ajax="true" data-ajax-complete="IslemTamamlandi" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="AddProgram" asp-controller="Program">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Program</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="programName">Name</label>
+                        @Html.TextBoxFor(x => x.Name, new { @required = "required", @Placeholder = "Name", @class = "form-control", @id = "programName", @maxlength = "50" })
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.Id)
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnAddProgram" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

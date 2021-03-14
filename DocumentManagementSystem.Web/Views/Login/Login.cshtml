@@ -1,0 +1,86 @@
+﻿@model DocumentManagementSystem.Web.Models.Login.LoginViewModel
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="~/css/login-page.css" rel="stylesheet" />
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+<!-- Include the above in your HEAD tag -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+<div class="main">
+    <div class="container">
+        <center>
+            <div class="middle">
+                <div id="login">
+                    <form method="post" data-ajax="true" data-ajax-complete="IslemTamamlandi" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="UserLogin" asp-controller="Login">
+
+                        <fieldset class="clearfix">
+                            <p><span class="fa fa-user"></span>@Html.TextBoxFor(x => x.UserMail, new { @required = "required", @Placeholder = "User Mail" })</p>
+                            <p><span class="fa fa-lock"></span>@Html.TextBoxFor(x => x.UserPassword, new { @required = "required", @Placeholder = "Password", @type = "password", @maxlenght = "8" })</p>
+                            <div>
+                                <span style="width:48%; text-align:left;  display: inline-block;">
+                                    <a class="small-text" href="@Url.Action("ForgotPassword","User")">
+                                        Forgot
+                                        password?
+                                    </a>
+                                </span>
+                                <span style="width:50%; text-align:right;  display: inline-block;"><input type="submit" value="Sign In"></span>
+                            </div>
+                        </fieldset>
+                        <span style="width:100%; text-align:left;  display: inline-block;">
+                            <a class="small-text" href="@Url.Action("Register","User")">
+                                Register a
+                                new membership
+                            </a>
+                        </span>
+
+                    </form>
+
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                </div> <!-- end login -->
+                <div class="logo">
+                    @*LOGO*@
+                    <img src="~/img/logo/emu-logo.png" class="img-fluid" alt="Eastern Mediterranean University">
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </center>
+    </div>
+</div>
+
+<script>
+
+    function IslemTamamlandi(data) {        
+        if (data.HataMi === false) {
+            window.location.href = '@Url.Action("Index", "Home")';
+       }
+        if (data.HataMi === true) {
+            alert(data.Mesaj);
+        }
+    }
+    function IslemBasarili(data) {      
+        if (data.HataMi === false) {
+           window.location.href = '@Url.Action("Index", "Home")';
+        }
+        if (data.HataMi === true) {
+            alert(data.Mesaj);
+        }
+    }
+    function IslemBasarisiz(data) {
+        if (data.HataMi === false) {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+        if (data.HataMi === true) {
+            alert(data.Mesaj);
+        }
+    }
+</script>

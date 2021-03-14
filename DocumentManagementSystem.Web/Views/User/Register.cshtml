@@ -1,0 +1,186 @@
+﻿@model DocumentManagementSystem.Web.Models.User.RegisterViewModel
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registration Page</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/lib/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/adminlte.min.css">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <h2><b>Document</b> Management System</h2>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">Register a new membership</p>
+
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status" id="loading" style="display:none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <form method="post" data-ajax="true" data-ajax-complete="IslemTamamlandi" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="Register" asp-controller="User">
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(x => x.UserName, new { @required = "required", @Placeholder = "Name", @class = "form-control", @maxlength = "50" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(x => x.UserSurname, new { @required = "required", @Placeholder = "Surname", @class = "form-control", @maxlength = "100" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(x => x.Email, new { @required = "required", @Placeholder = "Email", @class = "form-control", @type = "email" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>                  
+                    <div class="input-group mb-3">
+                        @Html.DropDownListFor(model => model.Gender, new SelectList(
+                              new List<SelectListItem> {
+                                  new SelectListItem { Text = "Male", Value = "Male" },
+                                  new SelectListItem { Text = "Female", Value = "Female" }
+                              }, "Value", "Text"),
+                              "Gender Section", new { @class = "custom-select" })
+                    </div>
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(x => x.Password, new { @required = "required", @Placeholder = "Password", @class = "form-control", @type = "password" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(x => x.ReTypePassword, new { @required = "required", @Placeholder = "Retype password", @class = "form-control", @type = "password" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+                @*<div class="social-auth-links text-center">
+                        <a href="#" class="btn btn-block btn-primary">
+                            <i class="fab fa-facebook mr-2"></i>
+                            Sign up using Facebook
+                        </a>
+                        <a href="#" class="btn btn-block btn-danger">
+                            <i class="fab fa-google-plus mr-2"></i>
+                            Sign up using Google+
+                        </a>
+                    </div>*@
+
+                <a href="@Url.Action("Login","Login")" class="text-center">I already have a membership</a>
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
+    </div>
+    <!-- /.register-box -->
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/adminlte.js"></script>
+
+    <script>
+        function IslemTamamlandi(data) {
+            if (data.HataMi === false) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+        function IslemBasarili(data) {
+            if (data.HataMi === false) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+        function IslemBasarisiz(data) {
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === false) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+    </script>
+</body>
+</html>

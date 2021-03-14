@@ -1,0 +1,406 @@
+﻿@model DocumentManagementSystem.Web.Models.Reports.RateModel
+
+    <script>
+    function IslemTamamlandi(data) {
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+    }
+    function IslemBasarili(data) {
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+    }
+    function IslemBasarisiz(data) {
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+    }
+
+    </script>
+
+<div class="modal fade" id="RateModal">
+    <div class="modal-dialog modal-lg">
+        <form method="post" data-ajax="true" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="AddRate" asp-controller="Reports">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@Model.Baslik </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <h5 style="color:red">I. Report (40 %)</h5>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="duzenBicim">Organization and format</label>
+                            @Html.TextBoxFor(x => x.DuzenBicim, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "duzenBicim" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="duzenBicimWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.DuzenBicimWeight, new { @class = "form-control", @type = "number", @id = "duzenBicimWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="alintilama">Proper citations</label>
+                            @Html.TextBoxFor(x => x.Alintilama, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "alintilama" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="alintilamaWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.AlintilamaWeight, new { @class = "form-control", @type = "number", @id = "alintilamaWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="yazimvedilkalite">Writing and English quality</label>
+                            @Html.TextBoxFor(x => x.YazimveDilkalite, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "yazimvedilkalite" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="yazimvedilkaliteWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.YazimveDilkaliteWeight, new { @class = "form-control", @type = "number", @id = "yazimvedilkaliteWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="raporunBoyutu">Size of the report</label>
+                            @Html.TextBoxFor(x => x.RaporBoyut, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "raporunBoyutu" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="raporunBoyutuWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.RaporBoyutWeight, new { @class = "form-control", @type = "number", @id = "raporunBoyutuWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="projeTanitimi">Motivation for the project (chapter 1 – introduction)</label>
+                            @Html.TextBoxFor(x => x.ProjeTanimi, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "projeTanitimi" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="projeTanitimiWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.ProjeTanimiWeight, new { @class = "form-control", @type = "number", @id = "projeTanitimiWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="gereksinimAnaliz">Requirements Analysis (Chapter 3, sections 3.1 and 3.2)</label>
+                            @Html.TextBoxFor(x => x.GereksinimAnaliz, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "gereksinimAnaliz" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="gereksinimAnalizWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.GereksinimAnalizWeight, new { @class = "form-control", @type = "number", @id = "gereksinimAnalizWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="gercekciKisitlama">Realistic Constraints (Chapter 3, section 3.3)</label>
+                            @Html.TextBoxFor(x => x.GercekciKisitlama, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "gercekciKisitlama" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="gercekciKisitlamaWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.GercekciKisitlamaWeight, new { @class = "form-control", @type = "number", @id = "gercekciKisitlamaWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="ahlakiKonu">Ethical issues (Chapter 3, section 3.4)</label>
+                            @Html.TextBoxFor(x => x.AhlakiKonu, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "ahlakiKonu" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="ahlakiKonuWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.AhlakiKonuWeight, new { @class = "form-control", @type = "number", @id = "ahlakiKonuWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="sistemTasarimi">System design  (chapter 4)</label>
+                            @Html.TextBoxFor(x => x.SistemTasarim, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "sistemTasarimi" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="sistemTasarimiWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.SistemTasarimWeight, new { @class = "form-control", @type = "number", @id = "sistemTasarimiWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="uygulama">Implementation (chapter 5, sections 5.1,  5.2, 5.4)</label>
+                            @Html.TextBoxFor(x => x.Uygulama, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "uygulama" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="uygulamaWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.UygulamaWeight, new { @class = "form-control", @type = "number", @id = "uygulamaWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="standartlar">Standards (chapter 5, section 5.3)</label>
+                            @Html.TextBoxFor(x => x.Standartlar, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "standartlar" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="standartlarWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.StandartlarWeight, new { @class = "form-control", @type = "number", @id = "standartlarWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="testler">Testing (chapter 6)</label>
+                            @Html.TextBoxFor(x => x.Testler, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "testler" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="testlerWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.TestlerWeight, new { @class = "form-control", @type = "number", @id = "testlerWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="sistemKullanimKılavuz">User guide for the system (chapter 7)</label>
+                            @Html.TextBoxFor(x => x.SistemKullanimKılavuz, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "sistemKullanimKılavuz" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="sistemKullanimKılavuzWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.SistemKullanimKılavuzWeight, new { @class = "form-control", @type = "number", @id = "sistemKullanimKılavuzWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="cozumAciklama">Description of the solution’s(Chapter 8) </label>
+                            @Html.TextBoxFor(x => x.CozumAciklama, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "cozumAciklama" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="cozumAciklamaWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.CozumAciklamaWeight, new { @class = "form-control", @type = "number", @id = "cozumAciklamaWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="kaynak">References</label>
+                            @Html.TextBoxFor(x => x.Kaynak, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "kaynak" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="kaynakWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.KaynakWeight, new { @class = "form-control", @type = "number", @id = "kaynakWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="ekler">Appendices</label>
+                            @Html.TextBoxFor(x => x.Ekler, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "ekler" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="eklerWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.EklerWeight, new { @class = "form-control", @type = "number", @id = "eklerWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+						<h5 style="color:red">II. Cooperation with the supervisor (10 %)</h5>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="toplantisikligi">Frequency of Interaction with the instructor</label>
+                            @Html.TextBoxFor(x => x.Toplantisikligi, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "toplantisikligi" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="toplantisikligiWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.ToplantisikligiWeight, new { @class = "form-control", @type = "number", @id = "toplantisikligiWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="ilerlemeRapor">Progress reports</label>
+                            @Html.TextBoxFor(x => x.IlerlemeRapor, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "ilerlemeRapor" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="ilerlemeRaporWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.IlerlemeRaporWeight, new { @class = "form-control", @type = "number", @id = "ilerlemeRaporWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="projeGelistirme">Project developed with full cooperation of the supervisor</label>
+                            @Html.TextBoxFor(x => x.ProjeGelistirme, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "projeGelistirme" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="projeGelistirmeWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.ProjeGelistirmeWeight, new { @class = "form-control", @type = "number", @id = "projeGelistirmeWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+						<h5 style="color:red">III.Quality and contribution of the project (30 %)</h5>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="disiplinliGelistirme">Multi-disciplinary development</label>
+                            @Html.TextBoxFor(x => x.DisiplinliGelistirme, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "disiplinliGelistirme" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="disiplinliGelistirmeWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.DisiplinliGelistirmeWeight, new { @class = "form-control", @type = "number", @id = "disiplinliGelistirmeWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="yeniFikir">Contribution of new ideas</label>
+                            @Html.TextBoxFor(x => x.YeniFikir, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "yeniFikir" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="yeniFikirWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.YeniFikirWeight, new { @class = "form-control", @type = "number", @id = "yeniFikirWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="uygulamaKalitesi">Implementation quality</label>
+                            @Html.TextBoxFor(x => x.UygulamaKalitesi, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "uygulamaKalitesi" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="uygulamaKalitesiWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.UygulamaKalitesiWeight, new { @class = "form-control", @type = "number", @id = "uygulamaKalitesiWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="uygulamaAraclari">Use of modern implementation tools</label>
+                            @Html.TextBoxFor(x => x.UygulamaAraclari, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "uygulamaAraclari" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="uygulamaAraclariWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.UygulamaAraclariWeight, new { @class = "form-control", @type = "number", @id = "uygulamaAraclariWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="projeCozum">Project solves a realistic problem</label>
+                            @Html.TextBoxFor(x => x.ProjeCozum, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "projeCozum" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="projeCozumWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.ProjeCozumWeight, new { @class = "form-control", @type = "number", @id = "projeCozumWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+						<h5 style="color:red">IV. Presentation (20 %)</h5>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="duzen">Organization</label>
+                            @Html.TextBoxFor(x => x.Duzen, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "duzen" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="duzenWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.DuzenWeight, new { @class = "form-control", @type = "number", @id = "duzenWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="zamanKullanim">Time usage</label>
+                            @Html.TextBoxFor(x => x.ZamanKullanim, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "zamanKullanim" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="zamanKullanimWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.ZamanKullanimWeight, new { @class = "form-control", @type = "number", @id = "zamanKullanimWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="slaytKalite">Quality and relevance of the slides</label>
+                            @Html.TextBoxFor(x => x.SlaytKalite, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "slaytKalite" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="slaytKaliteWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.SlaytKaliteWeight, new { @class = "form-control", @type = "number", @id = "slaytKaliteWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="iletisimYetenek">Communication Skills</label>
+                            @Html.TextBoxFor(x => x.IletisimYetenek, new { @required = "required", @class = "form-control", @min = "1", @max = "4", @step = "1", @type = "number", @id = "iletisimYetenek" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="iletisimYetenekWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.IletisimYetenekWeight, new { @class = "form-control", @type = "number", @id = "iletisimYetenekWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+							<label for="soruCevap">
+								Questions and Answers</label>
+                            @Html.TextBoxFor(x => x.SoruCevap, new { @required = "required", @class = "form-control", @type = "number", @min = "1", @max = "4", @step = "1", @id = "soruCevap" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="soruCevapWeight">Weight</label>
+                            @Html.TextBoxFor(x => x.SoruCevapWeight, new { @class = "form-control", @type = "number", @id = "soruCevapWeight", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+						<h5 style="color:red">Originality</h5>
+                    </div>
+                    <div class="form-group">
+						<label for="ozgunluk">Originality(out of 100)</label>
+                        @Html.TextBoxFor(x => x.Ozgunluk, "{0:G29}", new { @class = "form-control", @type = "number", @id = "ozgunluk", @min = "1", @max = "100", @step = "1", @required = "required", })
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.ReportsId)
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnAddProgram" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

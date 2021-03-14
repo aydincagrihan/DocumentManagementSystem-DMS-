@@ -1,0 +1,112 @@
+﻿@model DocumentManagementSystem.Web.Models.Semester.SemesterModel
+
+<script>
+     function IslemTamamlandi(data) {
+            if (data.HataMi === false) {
+                location.reload();//Sayfayı yenile
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+        function IslemBasarili(data) {
+            if (data.HataMi === false) {
+                location.reload();//Sayfayı yenile
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+        function IslemBasarisiz(data) {
+            if (data.HataMi === true) {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+            if (data.HataMi === false) {
+                location.reload();//Sayfayı yenile
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    position: 'bottomRight',
+                    autohide: true,
+                    delay: 3000,
+                    title: data.Baslik,
+                    body: data.Mesaj
+                })
+            }
+        }
+</script>
+<div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status" id="loading" style="display:none">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<div class="modal fade" id="SemesterModal">
+    <div class="modal-dialog">
+        <form method="post" data-ajax="true" data-ajax-complete="IslemTamamlandi" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="AddSemester" asp-controller="Semester">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Semester</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="semesterName">Semester</label>
+                        @Html.TextBoxFor(x => x.Name, new { @required = "required", @Placeholder = "Semester", @class = "form-control", @id = "semesterName", type = "number" })
+                    </div>
+                    <div class="form-group">
+                        @Html.DropDownListFor(model => model.SemesterType, new SelectList(
+                              new List<SelectListItem> {
+                                  new SelectListItem { Text = "Fall", Value = "Fall" },
+                                  new SelectListItem { Text = "Spring", Value = "Spring" }
+                              }, "Value", "Text"),
+                              "Semester Section", new { @class = "custom-select" })
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.Id)
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnAddSemester" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

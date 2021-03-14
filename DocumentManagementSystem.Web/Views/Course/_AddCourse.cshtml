@@ -1,0 +1,142 @@
+﻿@model DocumentManagementSystem.Web.Models.Course.CourseModel
+
+<script>
+    function IslemTamamlandi(data) {
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+    }
+    function IslemBasarili(data) {
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+    }
+    function IslemBasarisiz(data) {
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                position: 'bottomRight',
+                autohide: true,
+                delay: 3000,
+                title: data.Baslik,
+                body: data.Mesaj
+            })
+        }
+    }
+</script>
+<div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status" id="loading" style="display:none">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<div class="modal fade" id="CourseModal">
+    <div class="modal-dialog">
+        <form method="post" data-ajax="true" data-ajax-complete="IslemTamamlandi" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="AddCourse" asp-controller="Course">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Course</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="drpUserType">Program</label>
+                            @Html.DropDownListFor(model => model.ProgramsId, (SelectList)ViewBag.ProgramList, "Please Select Program", new { @class = "custom-select", @required = "required", @id = "drpProgram" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseName">Course</label>
+                        @Html.TextBoxFor(x => x.Name, new { @required = "required", @Placeholder = "Name", @class = "form-control", @id = "courseName", @maxlength = "50" })
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="courseCredit">Credit</label>
+                            @*<input type="number" class="form-control" id="courseCredit" placeholder="Credit">*@
+                            @Html.TextBoxFor(x => x.Credit, new { @required = "required", @Placeholder = "Credit", @class = "form-control", @id = "courseCredit", type = "number" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="drpSemester">Semester</label>
+                            @Html.DropDownListFor(model => model.SemesterId, (SelectList)ViewBag.SemesterList, "Please Select Semester", new { @class = "custom-select", @required = "required", @id = "drpSemester" })
+                            @*<label for="reservationdate">Semester</label>
+        <div class="input-group date" id="reservationdate" data-target-input="nearest">
+            @Html.TextBoxFor(x => x.Semester, new { @class = "form-control datetimepicker-input", @required = "required", @Placeholder = "Semester Date", @id = "reservationdate" })
+            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+        </div>*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseDescription">Description</label>
+                        @*<textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>*@
+                        @Html.TextAreaFor(x => x.Descripton, new { @Placeholder = "Description", @class = "form-control", @id = "courseDescription", type = "text", @rowns = "3" })
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.Id)
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnAddCourse" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    //Date range picker
+    $('#reservationdate').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+
+</script>
+
+

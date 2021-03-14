@@ -1,0 +1,128 @@
+﻿@using DocumentManagementSystem.Core.Enums
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model DocumentManagementSystem.Web.Models.User.UserModel
+
+<script>
+    //Update mi Insert işlemi mi bilgisi sessiondan alınıyor.
+     var OperationType = '@HttpContextAccessor.HttpContext.Session.GetString("OperationType")';
+
+    function IslemBasarili(data) {
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj
+            })
+        }
+        if (data.HataMi === true) {
+            $(document).Toasts('create', {
+                class: 'bg-danger', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj
+            })
+        }
+    }
+    function IslemBasarisiz(data) {
+        if (data.HataMi === false) {
+            location.reload();//Sayfayı yenile
+            $(document).Toasts('create', {
+                class: 'bg-success', position: 'bottomRight', autohide: true, delay: 3000, title: data.Baslik, body: data.Mesaj
+            })
+        }
+    }
+
+    //Eğer User Update işlemi ise otomatik şifre oluşturulmuyor.
+    $(function () {
+        $(function () {
+            $('#drpUserType').change(function () {
+                if (OperationType !== '@Constants.OperationType.Update') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Shared/GetNewPassword",
+                        datatype: "Json",
+                        //data: { },
+                        success: function (data) {
+                            if (data != null) {
+                                if ($("#drpUserType").prop('selectedIndex') > 0) {
+                                    $('#txtPassword').val(data.Password);
+                                }
+                                else {
+                                    $('#txtPassword').val(null);
+                                }
+                            }
+                            event.preventDefault();
+                            return false;
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    //Update işlemi ise Passwor ekranı görünmüyor ve otomatik şifre oluşturulmuyor
+    $(document).ready(function () {
+        if (OperationType === '@Constants.OperationType.Update') {
+            $("#passwordGroup").hide();
+        }
+    });
+
+
+
+</script>
+
+<div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status" id="loading" style="display:none">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<div class="modal fade" id="UserModal">
+    <div class="modal-dialog">
+        <form method="post" data-ajax="true" data-ajax-success="IslemBasarili" data-ajax-failure="IslemBasarisiz" data-ajax-loading="#loading" asp-action="UserOperations" asp-controller="User">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New User </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="userName">Name</label>
+                            @Html.TextBoxFor(x => x.Name, new { @required = "required", @Placeholder = "Name", @class = "form-control", @id = "userName", @maxlength = "50" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="userSurname">Surname</label>
+                            @Html.TextBoxFor(x => x.Surname, new { @required = "required", @Placeholder = "Surname", @class = "form-control", @id = "userSurname" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        @Html.TextBoxFor(x => x.Email, new { @required = "required", @Placeholder = "Email", @class = "form-control", @type = "email", @id = "email" })
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        @Html.DropDownListFor(model => model.Gender, new SelectList(
+                             new List<SelectListItem> {
+                                 new SelectListItem { Text = "Male", Value = "Male" },
+                                 new SelectListItem { Text = "Female", Value = "Female" }
+                             }, "Value", "Text"),
+                             "Gender Section", new { @required = "required", @class = "custom-select", @id = "gender" })
+                    </div>
+                    <div class="form-group">
+                        <label for="drpUserType">User Type</label>
+                        @Html.DropDownListFor(model => model.UserTypeId, (SelectList)ViewBag.UserTypeList, "Select Type of User", new { @class = "custom-select", @required = "required", @id = "drpUserType" })
+                    </div>
+                    <div class="form-group" id="passwordGroup">
+                        <label for="txtPassword">Generated Password</label>
+                        @Html.TextBoxFor(x => x.Password, new { @readonly = "readonly", @class = "form-control", @id = "txtPassword", @maxlength = "8" })
+                    </div>
+                </div>                
+                @Html.HiddenFor(m => m.Id)
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnAddProgram" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
